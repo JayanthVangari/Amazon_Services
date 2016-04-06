@@ -1,0 +1,51 @@
+package Worker;
+
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.PutItemResult;
+import com.amazonaws.services.dynamodbv2.document.DeleteItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
+import com.amazonaws.services.dynamodbv2.model.GetItemResult;
+public class Dynamo{
+	
+	boolean checktasks(Table table,String taskid)
+    {    	
+		Item item=table.getItem("taskid", taskid);
+    	if(item!=null)
+    	{
+    		return true;
+    	}
+    return false;
+    }
+    
+    void put(Table table,String taskid,String task)
+    {
+    	try
+    	{
+    		Item item=new Item().withKeyComponent("taskid", taskid).with("task", task);
+    		table.putItem(item);
+    	}
+    	catch(Exception e)
+    	{
+    		System.err.println(e.getMessage());
+    	}
+    }
+    
+ 	void delete(Table table, String taskid) {
+ 		try
+ 		{
+ 			
+ 			table.deleteItem("taskid", taskid);
+ 		}
+ 		catch(Exception e)
+ 		{
+ 			e.printStackTrace();
+ 		}
+	}
+ 	
+}
